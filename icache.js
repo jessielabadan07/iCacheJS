@@ -30,13 +30,7 @@ var ICache = (function() {
 
     		for(var cache in cacheList) {
 
-    			//console.log(cache.hasOwnProperty(cacheList[cache].key));
-
-    			//console.log(cacheList[cache]);
-    			//console.log(cacheList);
-    			//console.log(cacheList.indexOf(cacheList[cache].key));
-
-    			console.log(cacheList[cache].key, cacheList[cache].cachedObjects);
+    			//console.log(cacheList[cache].key, cacheList[cache].cachedObjects);
 
     		}
     	}    	
