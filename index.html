@@ -6,13 +6,21 @@
 </head>
 
 <body>
-<script src="src/icache.js"></script>
+<script src="icache.js"></script>
 <script type="text/javascript">
 
   ICache.init({
 
     uri: 'https://code.jquery.com/jquery-3.1.0.min.js',
     name: 'jquery',
+    expire: 24
+
+  });
+
+  ICache.init({
+
+    uri: 'https://code.google.com/jquery-3.1.0.min.js',
+    name: 'google',
     expire: 24
 
   });

@@ -21,6 +21,26 @@ var ICache = (function() {
       xhr.open('GET', uri, true);
       xhr.send();
 
+    },
+
+    isFound: function () {
+
+    	//console.log(cacheList, cacheList.length);
+    	if(cacheList.length > 0) {
+
+    		for(var cache in cacheList) {
+
+    			//console.log(cache.hasOwnProperty(cacheList[cache].key));
+
+    			//console.log(cacheList[cache]);
+    			//console.log(cacheList);
+    			//console.log(cacheList.indexOf(cacheList[cache].key));
+
+    			console.log(cacheList[cache].key, cacheList[cache].cachedObjects);
+
+    		}
+    	}    	
+
     }
 
   };
@@ -35,14 +55,18 @@ var ICache = (function() {
 
       this.expire = options.expire || 24;
 
-      CacheUtility.readFileContents(this.uri);
-
+      //CacheUtility.readFileContents(this.uri);
+            
       cacheList.push({
 
         key: this.name,
         cachedObjects: [this.uri, this.expire]
 
       });
+
+      CacheUtility.isFound();
+
+      //console.log(cacheList);
 
     };
 
