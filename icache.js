@@ -1,39 +1,86 @@
-var ICache = (function() {
+var ICache = (function(window) {
 
   var cacheList = [];
 
   CacheUtility = {
 
-    readFileContents: function(uri) {
+    readFileContents: function(uri, fn) {
 
-      var xhr = new XMLHttpRequest();
+      var xhr = null;
+
+      if (window.ActiveXObject) {
+
+        try {
+
+          xhr = new ActiveXObject("Msxml2.XMLHTTP");
+
+        } catch (e) {
+
+          try {
+
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+
+          } catch (e) {
+
+            console.log("There's an error to your request.");
+
+          }
+
+        }
+
+      } else if (window.XMLHttpRequest)
+        xhr = new XMLHttpRequest();
 
       xhr.onreadystatechange = function() {
+
         if (xhr.readyState === 4) {
+
           if (xhr.status === 200) {
-            var script = document.createElement('script');
-            script.innerText = xhr.responseText;
-            document.documentElement.firstChild.appendChild(script);
+
+            try {
+              
+              var script = document.createElement('script');
+
+              script.innerText = xhr.responseText;
+
+              document.documentElement.firstChild.appendChild(script);           
+
+              fn();         
+
+            } catch (err) {
+
+              console.log("There's an error to your request." + err);
+
+            }            
+
+          } else {
+
+            console.log("There's an error to your request. Status: " + xhr.statusText);
+
           }
+
         }
+
       }
 
-      xhr.open('GET', uri, true);
-      xhr.send();
+      try {
+
+        xhr.open('GET', uri, true);
+        xhr.send();
+
+      } catch (err) {
+
+        console.log("There's an error to your request. Status: " + err);
+
+      }
+
+      
 
     },
 
-    isFound: function () {
+    isFound: function(name) {
 
-    	//console.log(cacheList, cacheList.length);
-    	if(cacheList.length > 0) {
-
-    		for(var cache in cacheList) {
-
-    			//console.log(cacheList[cache].key, cacheList[cache].cachedObjects);
-
-    		}
-    	}    	
+      return (name in window.localStorage);
 
     }
 
@@ -41,7 +88,7 @@ var ICache = (function() {
 
   function Cache() {
 
-    this.init = function(options) {
+    this.init = function(options, fn) {
 
       this.name = options.name || "";
 
@@ -49,18 +96,21 @@ var ICache = (function() {
 
       this.expire = options.expire || 24;
 
-      //CacheUtility.readFileContents(this.uri);
-            
-      cacheList.push({
+      if (!CacheUtility.isFound(this.name)) {
 
-        key: this.name,
-        cachedObjects: [this.uri, this.expire]
+        window.localStorage[this.name] = JSON.stringify(options);
 
-      });
+      } else {
 
-      CacheUtility.isFound();
+        try {
 
-      //console.log(cacheList);
+          CacheUtility.readFileContents(this.uri, fn);
+
+        } catch (err) {
+          console.log(err);
+        }
+
+      }
 
     };
 
@@ -87,4 +137,4 @@ var ICache = (function() {
 
   };
 
-})();
+})(this);
