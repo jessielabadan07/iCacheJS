@@ -38,20 +38,20 @@ var ICache = (function(window) {
           if (xhr.status === 200) {
 
             try {
-              
+
               var script = document.createElement('script');
 
               script.innerText = xhr.responseText;
 
-              document.documentElement.firstChild.appendChild(script);           
+              document.documentElement.firstChild.appendChild(script);
 
-              fn();         
+              fn();
 
             } catch (err) {
 
               console.log("There's an error to your request." + err);
 
-            }            
+            }
 
           } else {
 
@@ -73,8 +73,6 @@ var ICache = (function(window) {
         console.log("There's an error to your request. Status: " + err);
 
       }
-
-      
 
     },
 
