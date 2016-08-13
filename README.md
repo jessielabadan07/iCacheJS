@@ -1,7 +1,5 @@
 # iCacheJS
 
-## [Read the docs][docs]
-
 ##To use the library:
 
 * Add script reference to your page.
