@@ -88,13 +88,10 @@ var ICache = (function(window) {
     __proto__: {
 
       constructor: function() {
-
         return new Cache();
-
       }
 
     },
-
 
   };
 
