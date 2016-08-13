@@ -9,7 +9,7 @@
   <script src="icache.js"></script>
   ```
 
-## Samples
+## Sample
 
 ```javascript
 /*
