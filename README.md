@@ -4,4 +4,6 @@
 
 * Add script reference to your page.
 
-  <script src='icache.js'></script>
+  ```html
+<!-- add reference to icache library -->
+<script src="icache.js"></script>
