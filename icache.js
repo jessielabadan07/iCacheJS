@@ -1,7 +1,5 @@
 var ICache = (function(window) {
 
-  var cacheList = [];
-
   CacheUtility = {
 
     readFileContents: function(uri, fn) {
@@ -11,19 +9,12 @@ var ICache = (function(window) {
       if (window.ActiveXObject) {
 
         try {
-
           xhr = new ActiveXObject("Msxml2.XMLHTTP");
-
         } catch (e) {
-
           try {
-
             xhr = new ActiveXObject("Microsoft.XMLHTTP");
-
           } catch (e) {
-
             console.log("There's an error to your request.");
-
           }
 
         }
@@ -34,29 +25,17 @@ var ICache = (function(window) {
       xhr.onreadystatechange = function() {
 
         if (xhr.readyState === 4) {
-
           if (xhr.status === 200) {
-
             try {
-
               var script = document.createElement('script');
-
               script.innerText = xhr.responseText;
-
               document.documentElement.firstChild.appendChild(script);
-
               fn();
-
             } catch (err) {
-
               console.log("There's an error to your request." + err);
-
             }
-
           } else {
-
             console.log("There's an error to your request. Status: " + xhr.statusText);
-
           }
 
         }
@@ -64,14 +43,10 @@ var ICache = (function(window) {
       }
 
       try {
-
         xhr.open('GET', uri, true);
         xhr.send();
-
       } catch (err) {
-
         console.log("There's an error to your request. Status: " + err);
-
       }
 
     },
@@ -95,21 +70,15 @@ var ICache = (function(window) {
       this.expire = options.expire || 24;
 
       if (!CacheUtility.isFound(this.name)) {
-
         window.localStorage[this.name] = JSON.stringify(options);
-
       } else {
-
         try {
 
           CacheUtility.readFileContents(this.uri, fn);
-
         } catch (err) {
           console.log(err);
         }
-
       }
-
     };
 
   };
