@@ -1,13 +1,14 @@
 var ICache = (function(window) {
 
+  var xhr = null;
+
   CacheUtility = {
 
-    readFileContents: function(uri, fn) {
+    putFileContents: function(options, fn) {
 
       var xhr = null;
 
       if (window.ActiveXObject) {
-
         try {
           xhr = new ActiveXObject("Msxml2.XMLHTTP");
         } catch (e) {
@@ -16,20 +17,20 @@ var ICache = (function(window) {
           } catch (e) {
             console.log("There's an error to your request.");
           }
-
         }
-
       } else if (window.XMLHttpRequest)
         xhr = new XMLHttpRequest();
 
       xhr.onreadystatechange = function() {
-
+        // If it is ready
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             try {
               var script = document.createElement('script');
               script.innerText = xhr.responseText;
               document.documentElement.firstChild.appendChild(script);
+              options.contents = xhr.responseText;
+              window.localStorage[options.name] = JSON.stringify(options);
               fn();
             } catch (err) {
               console.log("There's an error to your request." + err);
@@ -43,10 +44,27 @@ var ICache = (function(window) {
       }
 
       try {
-        xhr.open('GET', uri, true);
+        // Open connection
+        xhr.open('GET', options.uri, true);
         xhr.send();
       } catch (err) {
         console.log("There's an error to your request. Status: " + err);
+      }
+
+    },
+
+    readFileContents: function(name, fn) {
+
+      if (name in window.localStorage) {
+        try {
+          var script = document.createElement('script');
+          var cachedObjects = JSON.parse(window.localStorage[name]);
+          script.innerText = cachedObjects.contents;
+          document.documentElement.firstChild.appendChild(script);
+          fn();
+        } catch (err) {
+          console.log(err)
+        }
       }
 
     },
@@ -63,18 +81,15 @@ var ICache = (function(window) {
 
     this.init = function(options, fn) {
 
-      this.name = options.name || "";
-
-      this.uri = options.uri || "";
-
-      this.expire = options.expire || 24;
-
-      if (!CacheUtility.isFound(this.name)) {
-        window.localStorage[this.name] = JSON.stringify(options);
+      if (!CacheUtility.isFound(options.name)) {
+        try {
+          CacheUtility.putFileContents(options, fn);
+        } catch (err) {
+          console.log(err);
+        }
       } else {
         try {
-
-          CacheUtility.readFileContents(this.uri, fn);
+          CacheUtility.readFileContents(options.name, fn);
         } catch (err) {
           console.log(err);
         }
